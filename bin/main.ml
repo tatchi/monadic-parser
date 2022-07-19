@@ -1,12 +1,32 @@
 module P = Parcoom
 
 let () =
-  let open P.O in
-  let p =
-    let+ p1 = P.int 5 in
-    Printf.sprintf "Got result: %i" p1
-  in
-  let res = P.parse "5" p in
+  let p = P.string "hello" in
+  let res = P.parse "helloworld" p in
   match res with
-  | Ok s -> print_endline s
-  | Error e -> failwith (P.Error.desc e)
+  | Ok s -> Printf.printf "result: s = %s\n" s
+  | Error e ->
+    failwith
+      (Printf.sprintf "Error: %s. Position: %d" (P.Error.desc e) (P.Error.pos e))
+
+let () =
+  let open P.O in
+  let p1 = P.string "hello" in
+  let p2 = P.string " world" in
+  let res = P.parse "hello world" (p1 *> p2) in
+  match res with
+  | Ok s -> Printf.printf "right: s = %s\n" s
+  | Error e ->
+    failwith
+      (Printf.sprintf "Error: %s. Position: %d" (P.Error.desc e) (P.Error.pos e))
+
+let () =
+  let open P.O in
+  let p1 = P.string "hello" in
+  let p2 = P.string " world" in
+  let res = P.parse "hello world" (p1 <* p2) in
+  match res with
+  | Ok s -> Printf.printf "left: s = %s\n" s
+  | Error e ->
+    failwith
+      (Printf.sprintf "Error: %s. Position: %d" (P.Error.desc e) (P.Error.pos e))

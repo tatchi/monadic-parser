@@ -1,2 +1,7 @@
 (library
  (name parcoom))
+
+(env
+ (dev
+  (flags
+   (:standard -w -32))))
