@@ -37,8 +37,6 @@ module Input = struct
 
   let take_while p t =
     let length = String.length t.text in
-    (* if length = 0 then (t, )
-       else *)
     let i = ref 0 in
     let buff = Buffer.create length in
     while !i < length && p t.text.[!i] do
@@ -47,7 +45,6 @@ module Input = struct
     done;
     let prefix = Buffer.contents buff in
     let input = { text = prefix; pos = t.pos + !i } in
-    (* let prefix_len = String.length prefix in *)
     let rest = sub ~start:!i ~len:(length - !i) t in
     (rest, input)
 end
@@ -61,33 +58,32 @@ let error ~got ~expected pos =
     (Printf.sprintf "Expected \"%s\" but got \"%s\"" expected got)
     pos
 
-(* let take_while p s =
-   let length = String.length s in
-   if length = 0 then (0, "")
-   else
-     let i = ref 0 in
-     let buff = Buffer.create length in
-     while !i < length && p s.[!i] do
-       Buffer.add_char buff s.[!i]
-     done;
-     (!i, Buffer.contents buff) *)
-
 let is_number = function
   | '0' .. '9' -> true
   | _ -> false
 
+(* let split_number n =
+   let rec loop acc n =
+     if n < 10 then n :: acc
+     else
+       let r = n mod 10 in
+       let d = n / 10 in
+       loop (r :: acc) d
+   in
+   loop [] n *)
+
 let int n =
   { run =
       (fun input ->
-        let input', s = Input.take_while is_number input in
-        if s.text = "" || int_of_string s.text != n then
-          ( input
-          , Error
-              (Error.create
-                 (Printf.sprintf "Expected number %i. Instead got `%s`" n
-                    input.text)
-                 input.pos) )
-        else (input', Ok n))
+        let s = string_of_int n in
+        let unexpected_int_error =
+          Error.create (Printf.sprintf "Expected number %i" n) input.pos
+        in
+        match Input.lsplit ~prefix:s input with
+        | None -> (input, Error unexpected_int_error)
+        | Some (input', prefix_input) ->
+          if prefix_input.text = s then (input', Ok n)
+          else (input, Error unexpected_int_error))
   }
 
 let string s =
