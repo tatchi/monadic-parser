@@ -30,3 +30,14 @@ let () =
   | Error e ->
     failwith
       (Printf.sprintf "Error: %s. Position: %d" (P.Error.desc e) (P.Error.pos e))
+
+let () =
+  let open P.O in
+  let p1 = P.string "hello" in
+  let p2 = P.int 12 in
+  let res = P.parse "hello123" (p1 *> p2) in
+  match res with
+  | Ok s -> Printf.printf "int: s = %i\n" s
+  | Error e ->
+    failwith
+      (Printf.sprintf "Error: %s. Position: %d" (P.Error.desc e) (P.Error.pos e))

@@ -12,6 +12,8 @@ end
 
 type 'a t
 
+val int : int -> int t
+
 val string : string -> string t
 
 val return : 'a -> 'a t
