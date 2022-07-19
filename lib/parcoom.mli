@@ -16,6 +16,8 @@ val int : int -> int t
 
 val string : string -> string t
 
+val end_ : unit t
+
 val return : 'a -> 'a t
 
 val map : 'a t -> f:('a -> 'b) -> 'b t

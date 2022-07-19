@@ -86,6 +86,19 @@ let int n =
           else (input, Error unexpected_int_error))
   }
 
+let end_ =
+  { run =
+      (fun input ->
+        if String.length input.text = 0 then (input, Ok ())
+        else
+          ( input
+          , Error
+              (Error.create
+                 (Printf.sprintf "Expected end of input, instead got: %s"
+                    input.text)
+                 input.pos) ))
+  }
+
 let string s =
   { run =
       (fun input ->

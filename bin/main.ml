@@ -33,9 +33,7 @@ let () =
 
 let () =
   let open P.O in
-  let p1 = P.string "hello" in
-  let p2 = P.int 12 in
-  let res = P.parse "hello123" (p1 *> p2) in
+  let res = P.parse "hello123" (P.string "hello" *> P.int 12 <* P.end_) in
   match res with
   | Ok s -> Printf.printf "int: s = %i\n" s
   | Error e ->
