@@ -158,6 +158,22 @@ let left p1 p2 =
           | input'', Ok _ -> (input'', Ok r1)))
   }
 
+let either p1 p2 =
+  { run =
+      (fun input ->
+        match p1.run input with
+        | (_, Ok _) as r -> r
+        | _, Error left_error -> (
+          match p2.run input with
+          | (_, Ok _) as r -> r
+          | _, Error right_error ->
+            ( input
+            , Error
+                (Error.create
+                   (Printf.sprintf "%s or %s" left_error.desc right_error.desc)
+                   input.pos) )))
+  }
+
 module O = struct
   let ( let+ ) t f = map t ~f
 
@@ -168,6 +184,10 @@ module O = struct
   let ( <* ) = left
 
   let ( *> ) = right
+
+  let ( <*> ) = both
+
+  let ( <|> ) = either
 end
 
 let parse_full (s : string) (p : 'a t) = p.run (Input.of_string s)

@@ -30,6 +30,8 @@ val left : 'a t -> 'b t -> 'a t
 
 val right : 'a t -> 'b t -> 'b t
 
+val either : 'a t -> 'a t -> 'a t
+
 module O : sig
   val ( let+ ) : 'a t -> ('a -> 'b) -> 'b t
 
@@ -40,6 +42,12 @@ module O : sig
   val ( <* ) : 'a t -> 'b t -> 'a t
 
   val ( *> ) : 'a t -> 'b t -> 'b t
+
+  val ( <*> ) : 'a t -> 'b t -> ('a * 'b) t
+
+  val ( <*> ) : 'a t -> 'b t -> ('a * 'b) t
+
+  val ( <|> ) : 'a t -> 'a t -> 'a t
 end
 
 val parse : string -> 'a t -> ('a, Error.t) result

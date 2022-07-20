@@ -33,9 +33,38 @@ let () =
 
 let () =
   let open P.O in
-  let res = P.parse "hello123" (P.string "hello" *> P.int 12 <* P.end_) in
+  let res = P.parse "hello12" (P.string "hello" *> P.int 12 <* P.end_) in
   match res with
   | Ok s -> Printf.printf "int: s = %i\n" s
+  | Error e ->
+    failwith
+      (Printf.sprintf "Error: %s. Position: %d" (P.Error.desc e) (P.Error.pos e))
+
+let () =
+  let open P.O in
+  (* let p = P.string "hello" <*> P.int 12 <*> P.end_ in *)
+  let p =
+    let+ p1 = P.string "hello"
+    and+ p2 = P.int 12
+    and+ p3 = P.string "world" <* P.end_ in
+    p1 ^ " " ^ string_of_int p2 ^ " " ^ p3
+  in
+  let res = P.parse "hello12world" p in
+  match res with
+  | Ok s -> Printf.printf "both: s = %s\n" s
+  | Error e ->
+    failwith
+      (Printf.sprintf "Error: %s. Position: %d" (P.Error.desc e) (P.Error.pos e))
+
+let () =
+  let open P.O in
+  let res =
+    P.parse "coucou worl"
+      (P.string "coucou " *> P.either (P.string "hello") (P.string "world")
+      <* P.end_)
+  in
+  match res with
+  | Ok s -> Printf.printf "either: s = %s\n" s
   | Error e ->
     failwith
       (Printf.sprintf "Error: %s. Position: %d" (P.Error.desc e) (P.Error.pos e))
