@@ -174,6 +174,13 @@ let either p1 p2 =
                    input.pos) )))
   }
 
+let parse_while p =
+  { run =
+      (fun input ->
+        let input', parsed = Input.take_while p input in
+        (input', Ok parsed.text))
+  }
+
 module O = struct
   let ( let+ ) t f = map t ~f
 

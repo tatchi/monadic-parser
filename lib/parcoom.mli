@@ -32,6 +32,8 @@ val right : 'a t -> 'b t -> 'b t
 
 val either : 'a t -> 'a t -> 'a t
 
+val parse_while : (char -> bool) -> string t
+
 module O : sig
   val ( let+ ) : 'a t -> ('a -> 'b) -> 'b t
 
