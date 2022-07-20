@@ -169,6 +169,19 @@ let either p1 p2 =
                    input.pos) )))
   }
 
+let bool b =
+  { run =
+      (fun input ->
+        let p = either (string "true") (string "false") in
+        match p.run input with
+        | input', Ok r when bool_of_string r = b -> (input', Ok b)
+        | input', Error _ | input', Ok _ ->
+          ( input'
+          , Error
+              (Error.create (Printf.sprintf "Expected bool `%b`" b) input.pos)
+          ))
+  }
+
 let parse_while p =
   { run =
       (fun input ->

@@ -19,6 +19,8 @@ val int : int -> int t
 
 val string : string -> string t
 
+val bool : bool -> bool t
+
 val end_ : unit t
 
 val return : 'a -> 'a t

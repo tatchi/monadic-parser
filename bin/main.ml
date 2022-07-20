@@ -94,3 +94,15 @@ let () =
   assert (res = Error { desc = "Expected not to parse `world`"; pos = 5 });
   let res = P.parse "helloworl" p in
   assert (res = Ok "hello")
+
+let () =
+  let p = P.bool true in
+  let res = P.parse "true" p in
+  assert (res = Ok true);
+  let p = P.bool false in
+  let res = P.parse "false" p in
+  assert (res = Ok false);
+  let res = P.parse "falsy" p in
+  assert (res = Error { desc = "Expected bool `false`"; pos = 0 });
+  let res = P.parse "true" p in
+  assert (res = Error { desc = "Expected bool `false`"; pos = 0 })
