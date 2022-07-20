@@ -86,3 +86,11 @@ let () =
   assert (res = Ok (Some 12));
   let res = P.parse "hello" p in
   assert (res = Ok None)
+
+let () =
+  let open P.O in
+  let p = P.string "hello" <* P.not (P.string "world") in
+  let res = P.parse "helloworld" p in
+  assert (res = Error { desc = "Expected not to parse `world`"; pos = 5 });
+  let res = P.parse "helloworl" p in
+  assert (res = Ok "hello")

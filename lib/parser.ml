@@ -184,6 +184,20 @@ let optional p =
         | input', Ok r -> (input', Ok (Some r)))
   }
 
+let not p =
+  { run =
+      (fun input ->
+        match p.run input with
+        | _, Error _ -> (input, Ok ())
+        | _, Ok _ ->
+          ( input
+          , Error
+              (Error.create
+                 (* TODO: add a [to_string] fn in the type so that we can print what we parsed ? *)
+                 (Printf.sprintf "Expected not to parse `%s`" input.text)
+                 input.pos) ))
+  }
+
 module O = struct
   let ( let+ ) t f = map t ~f
 

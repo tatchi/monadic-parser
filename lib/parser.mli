@@ -39,6 +39,10 @@ val parse_while : (char -> bool) -> string t
 
 val optional : 'a t -> 'a option t
 
+val not : 'a t -> unit t
+
+(* val many : 'a t -> 'a list t *)
+
 module O : sig
   val ( let+ ) : 'a t -> ('a -> 'b) -> 'b t
 
