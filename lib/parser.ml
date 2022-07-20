@@ -41,7 +41,7 @@ module Input = struct
     let buff = Buffer.create length in
     while !i < length && p t.text.[!i] do
       Buffer.add_char buff t.text.[!i];
-      i := !i + 1
+      incr i
     done;
     let prefix = Buffer.contents buff in
     let input = { text = prefix; pos = t.pos + !i } in
