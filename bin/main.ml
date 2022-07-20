@@ -1,4 +1,4 @@
-module P = Parcoom
+module P = Parser
 
 let () = Printexc.record_backtrace true
 

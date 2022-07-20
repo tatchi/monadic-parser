@@ -1,5 +1,5 @@
 (library
- (name parcoom))
+ (name parser))
 
 (env
  (dev
