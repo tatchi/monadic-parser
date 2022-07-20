@@ -53,11 +53,6 @@ type 'a t = { run : Input.t -> Input.t * ('a, Error.t) result }
 
 let return t = { run = (fun input -> (input, Ok t)) }
 
-let error ~got ~expected pos =
-  Error.create
-    (Printf.sprintf "Expected \"%s\" but got \"%s\"" expected got)
-    pos
-
 let is_number = function
   | '0' .. '9' -> true
   | _ -> false
@@ -94,7 +89,7 @@ let end_ =
           ( input
           , Error
               (Error.create
-                 (Printf.sprintf "Expected end of input, instead got: %s"
+                 (Printf.sprintf "Expected end of input, instead got: `%s`"
                     input.text)
                  input.pos) ))
   }
@@ -103,7 +98,7 @@ let string s =
   { run =
       (fun input ->
         let unexpected_prefix_error =
-          Error.create (Printf.sprintf "Expected prefix: `%s`" s) input.pos
+          Error.create (Printf.sprintf "Expected string `%s`" s) input.pos
         in
         match Input.lsplit ~prefix:s input with
         | None -> (input, Error unexpected_prefix_error)
@@ -196,8 +191,6 @@ module O = struct
 
   let ( <|> ) = either
 end
-
-let parse_full (s : string) (p : 'a t) = p.run (Input.of_string s)
 
 let parse (s : string) (p : 'a t) =
   let _, res = p.run (Input.of_string s) in

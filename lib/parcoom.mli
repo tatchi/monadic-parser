@@ -1,5 +1,8 @@
 module Error : sig
-  type t
+  type t =
+    { desc : string
+    ; pos : int
+    }
 
   val desc : t -> string
 
@@ -53,5 +56,3 @@ module O : sig
 end
 
 val parse : string -> 'a t -> ('a, Error.t) result
-
-val parse_full : string -> 'a t -> Input.t * ('a, Error.t) result
