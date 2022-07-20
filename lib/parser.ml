@@ -176,6 +176,14 @@ let parse_while p =
         (input', Ok parsed.text))
   }
 
+let optional p =
+  { run =
+      (fun input ->
+        match p.run input with
+        | _, Error _ -> (input, Ok None)
+        | input', Ok r -> (input', Ok (Some r)))
+  }
+
 module O = struct
   let ( let+ ) t f = map t ~f
 

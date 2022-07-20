@@ -78,3 +78,11 @@ let () =
   in
   let res = P.parse "hello 12world" p in
   assert (res = Ok "hello 12")
+
+let () =
+  let open P.O in
+  let p = P.string "hello" *> P.optional (P.int 12) <* P.end_ in
+  let res = P.parse "hello12" p in
+  assert (res = Ok (Some 12));
+  let res = P.parse "hello" p in
+  assert (res = Ok None)
