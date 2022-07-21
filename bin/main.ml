@@ -124,7 +124,7 @@ let () =
   let digits = P.parse_while is_digit in
   let p =
     digits
-    <*> P.many (P.string " " *> digits)
+    <*> P.many (P.space *> digits)
     |> P.map ~f:(fun (x, xs) -> x :: xs)
     |> P.map ~f:(List.map int_of_string)
   in

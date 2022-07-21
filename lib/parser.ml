@@ -211,6 +211,8 @@ let not p =
                  input.pos) ))
   }
 
+let space = string " "
+
 let many p =
   { run =
       (fun input ->

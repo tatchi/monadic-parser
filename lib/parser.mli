@@ -45,7 +45,7 @@ val not : 'a t -> unit t
 
 val many : 'a t -> 'a list t
 
-(* val many : 'a t -> 'a list t *)
+val space : string t
 
 module O : sig
   val ( let+ ) : 'a t -> ('a -> 'b) -> 'b t
