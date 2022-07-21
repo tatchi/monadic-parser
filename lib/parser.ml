@@ -211,6 +211,17 @@ let not p =
                  input.pos) ))
   }
 
+let many p =
+  { run =
+      (fun input ->
+        let rec loop acc s =
+          match p.run s with
+          | input, Error _ -> (input, Ok (acc |> List.rev))
+          | input', Ok r -> loop (r :: acc) input'
+        in
+        loop [] input)
+  }
+
 module O = struct
   let ( let+ ) t f = map t ~f
 

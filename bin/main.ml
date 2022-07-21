@@ -106,3 +106,19 @@ let () =
   assert (res = Error { desc = "Expected bool `false`"; pos = 0 });
   let res = P.parse "true" p in
   assert (res = Error { desc = "Expected bool `false`"; pos = 0 })
+
+let () =
+  let open P.O in
+  let p = P.many @@ P.string "hello" in
+  let res = P.parse "hellohellohelloworld" p in
+  assert (res = Ok [ "hello"; "hello"; "hello" ]);
+  let res = P.parse "world" p in
+  assert (res = Ok []);
+  let p = P.many (P.string "hello") <*> P.string " world" in
+  let res = P.parse "hellohellohello world" p in
+  assert (res = Ok ([ "hello"; "hello"; "hello" ], " world"));
+  let p = P.many @@ P.string "hello" <* P.end_ in
+  let res = P.parse "hellohellohelloworld" p in
+  assert (
+    res
+    = Error { desc = "Expected end of input, instead got: `world`"; pos = 15 })

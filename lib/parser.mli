@@ -43,6 +43,8 @@ val optional : 'a t -> 'a option t
 
 val not : 'a t -> unit t
 
+val many : 'a t -> 'a list t
+
 (* val many : 'a t -> 'a list t *)
 
 module O : sig
