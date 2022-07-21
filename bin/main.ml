@@ -117,6 +117,19 @@ let () =
   let p = P.many (P.string "hello") <*> P.string " world" in
   let res = P.parse "hellohellohello world" p in
   assert (res = Ok ([ "hello"; "hello"; "hello" ], " world"));
+  let is_digit = function
+    | '0' .. '9' -> true
+    | _ -> false
+  in
+  let digits = P.parse_while is_digit in
+  let p =
+    digits
+    <*> P.many (P.string " " *> digits)
+    |> P.map ~f:(fun (x, xs) -> x :: xs)
+    |> P.map ~f:(List.map int_of_string)
+  in
+  let res = P.parse "54 123 45 99" p in
+  assert (res = Ok [ 54; 123; 45; 99 ]);
   let p = P.many @@ P.string "hello" <* P.end_ in
   let res = P.parse "hellohellohelloworld" p in
   assert (
