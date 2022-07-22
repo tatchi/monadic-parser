@@ -216,9 +216,9 @@ let space = string " "
 let many p =
   { run =
       (fun input ->
-        let rec loop acc s =
-          match p.run s with
-          | input, Error _ -> (input, Ok (acc |> List.rev))
+        let rec loop acc (input : Input.t) =
+          match p.run input with
+          | _, Error _ -> (input, Ok (acc |> List.rev))
           | input', Ok r -> loop (r :: acc) input'
         in
         loop [] input)
