@@ -3,6 +3,7 @@ module Error = struct
     { desc : string
     ; pos : int
     }
+  [@@deriving show]
 
   let desc t = t.desc
 

@@ -135,3 +135,57 @@ let () =
   assert (
     res
     = Error { desc = "Expected end of input, instead got: `world`"; pos = 15 })
+
+module Ini = struct
+  type key = string [@@deriving show]
+
+  type value = string [@@deriving show]
+
+  type pair = key * value [@@deriving show]
+
+  type section =
+    { name : string
+    ; pairs : pair list
+    }
+  [@@deriving show]
+
+  type t = section list [@@deriving show]
+
+  let[@warning "-32"] parse (s : string) =
+    let open P.O in
+    let brs = P.many (P.string "\n") in
+    let section_name : string P.t =
+      P.string "[" *> P.parse_while (fun c -> c != ']') <* P.string "]"
+    in
+    let pair : pair P.t =
+      let wss = P.parse_while (fun c -> c = ' ') in
+      let name =
+        P.parse_while (function
+          | ' ' | '=' | '\n' -> false
+          | _ -> true)
+      in
+      wss *> name <* wss <* P.string "=" <* wss <*> name
+    in
+    let section : section P.t =
+      let+ name = section_name <* brs
+      and+ pairs = P.many (pair <* brs) in
+      { name; pairs }
+    in
+    let ini : t P.t = P.many (section <* brs) in
+    P.parse s ini
+end
+
+let () =
+  let read_file path =
+    let ch = open_in path in
+    let n = in_channel_length ch in
+    let s = really_input_string ch n in
+    close_in ch;
+    s
+  in
+  let path = Sys.getcwd () ^ "/bin/test.ini" in
+  let data = read_file path in
+  let res = Ini.parse data in
+  match res with
+  | Ok res -> print_endline (Ini.show res)
+  | Error e -> Printf.printf "Error: %s. Position: %d\n" e.desc e.pos

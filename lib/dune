@@ -1,5 +1,8 @@
 (library
- (name parser))
+ (name parser)
+ (preprocess
+  (pps ppx_show))
+ (libraries ppx_show.runtime))
 
 (env
  (dev

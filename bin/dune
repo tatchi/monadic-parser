@@ -1,3 +1,5 @@
 (executable
  (name main)
- (libraries parser))
+ (preprocess
+  (pps ppx_show))
+ (libraries parser ppx_show.runtime))
