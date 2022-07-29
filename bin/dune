@@ -1,5 +1,10 @@
 (executable
+ (modules main)
  (name main)
  (preprocess
   (pps ppx_show))
  (libraries parser ppx_show.runtime))
+
+(executable
+ (modules gadt)
+ (name gadt))
